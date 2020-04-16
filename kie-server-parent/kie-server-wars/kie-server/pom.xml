@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.kie.server</groupId>
     <artifactId>kie-server-wars</artifactId>
-    <version>7.32.0-SNAPSHOT</version>
+    <version>7.37.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>kie-server</artifactId>
@@ -144,6 +144,15 @@
     </dependency>
     <dependency>
       <groupId>org.kie.server</groupId>
+      <artifactId>kie-server-services-scenario-simulation</artifactId>
+    </dependency>
+    <!-- NOTE: Test Scenario uses a jUnit runner to execute the tests so jUnit is needed at runtime -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.server</groupId>
       <artifactId>kie-server-jms</artifactId>
     </dependency>
     <dependency>
@@ -194,6 +203,10 @@
       <artifactId>kie-server-rest-prometheus</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.kie.server</groupId>
+      <artifactId>kie-server-rest-scenario-simulation</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.kie</groupId>
       <artifactId>kie-swagger-ui</artifactId>
     </dependency>
@@ -221,11 +234,37 @@
       <artifactId>kie-server-controller-websocket-common</artifactId>
     </dependency>
 
+    <!-- KIE Server OptaPlanner & jBPM task assigning -->
+    <dependency>
+      <groupId>org.kie.server</groupId>
+      <artifactId>kie-server-services-task-assigning-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.server</groupId>
+      <artifactId>kie-server-services-task-assigning-planning</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.server</groupId>
+      <artifactId>kie-server-services-task-assigning-runtime</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.server</groupId>
+      <artifactId>kie-server-services-task-assigning-user-system-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.server</groupId>
+      <artifactId>kie-server-services-task-assigning-user-system-simple</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.server</groupId>
+      <artifactId>kie-server-rest-task-assigning-runtime</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>org.jbpm</groupId>
       <artifactId>jbpm-services-ejb-timer</artifactId>
     </dependency>
-    
+
     <!-- openshift -->
     <dependency>
       <groupId>org.kie.server</groupId>

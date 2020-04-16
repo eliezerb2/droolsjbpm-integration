@@ -17,9 +17,11 @@
 package org.jbpm.springboot.autoconfigure;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
@@ -73,6 +75,8 @@ import org.jbpm.services.api.admin.UserTaskAdminService;
 import org.jbpm.services.api.query.QueryService;
 import org.jbpm.services.task.HumanTaskServiceFactory;
 import org.jbpm.services.task.audit.TaskAuditServiceFactory;
+import org.jbpm.services.task.deadlines.NotificationListener;
+import org.jbpm.services.task.deadlines.notifications.impl.NotificationListenerManager;
 import org.jbpm.services.task.identity.DefaultUserInfo;
 import org.jbpm.shared.services.impl.TransactionalCommandService;
 import org.jbpm.springboot.quartz.SpringConnectionProvider;
@@ -93,6 +97,8 @@ import org.kie.spring.jbpm.services.SpringTransactionalCommandService;
 import org.kie.spring.manager.SpringRuntimeManagerFactoryImpl;
 import org.kie.spring.persistence.KieSpringTransactionManager;
 import org.kie.spring.persistence.KieSpringTransactionManagerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -125,7 +131,9 @@ import org.springframework.util.ClassUtils;
 @ConditionalOnClass({ KModuleDeploymentService.class })
 @EnableConfigurationProperties({JBPMProperties.class, DataSourceProperties.class})
 public class JBPMAutoConfiguration {
-    
+
+    private static final Logger logger = LoggerFactory.getLogger(JBPMAutoConfiguration.class);
+
     protected static final String PERSISTENCE_UNIT_NAME = "org.jbpm.domain";
     protected static final String PERSISTENCE_XML_LOCATION = "classpath:/META-INF/jbpm-persistence.xml";
     
@@ -145,7 +153,9 @@ public class JBPMAutoConfiguration {
     private JBPMProperties properties;
     
     private PlatformTransactionManager transactionManager;
- 
+
+    private List<NotificationListener> notificationListeners;
+
     public JBPMAutoConfiguration(PlatformTransactionManager transactionManager,
                                  JBPMProperties properties,
                                  ApplicationContext applicationContext) {
@@ -171,10 +181,10 @@ public class JBPMAutoConfiguration {
         if (properties.getQuartz().isEnabled()) {
             SpringConnectionProvider.setApplicationContext(applicationContext);
         }
-    }  
-    
-   
-    
+
+    }
+
+
     @Bean
     @ConditionalOnMissingBean(name = "entityManagerFactory")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource, JpaProperties jpaProperties){
@@ -331,10 +341,24 @@ public class JBPMAutoConfiguration {
         ((SpringKModuleDeploymentService) deploymentService).setContext(applicationContext);
 
         ((SpringKModuleDeploymentService) deploymentService).addListener(((BPMN2DataServiceImpl) definitionService));
-        
         return deploymentService;
     }
-    
+
+    @Bean
+    @ConditionalOnMissingBean(name = "notificationListeners")
+    public List<NotificationListener> deploymentBeans() {
+        if (notificationListeners == null) {
+            notificationListeners = new ArrayList<>();
+            Map<String, NotificationListener> foundBeans = applicationContext.getBeansOfType(NotificationListener.class);
+            for (NotificationListener listener : foundBeans.values()) {
+                logger.debug("Registering {} notification listener", listener);
+                notificationListeners.add(listener);
+            }
+            NotificationListenerManager.get().registerAdditionalNotificationListener(new ArrayList<>(foundBeans.values()));
+        }
+        return notificationListeners;
+    }
+
     @Bean
     @ConditionalOnMissingBean(name = "runtimeDataService")
     public RuntimeDataService runtimeDataService(EntityManagerFactory entityManagerFactory, UserGroupCallback userGroupCallback, UserInfo userInfo, TransactionalCommandService transactionalCommandService, IdentityProvider identityProvider, DeploymentService deploymentService) {

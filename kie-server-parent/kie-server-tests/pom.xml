@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.kie.server</groupId>
     <artifactId>kie-server-parent</artifactId>
-    <version>7.32.0-SNAPSHOT</version>
+    <version>7.37.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>kie-server-tests</artifactId>
@@ -71,7 +71,7 @@
          and for free (e.g. from http://jbossas.jboss.org/downloads.html) and the zip location needs to be specified
          here or via system property when running the build (don't forget to use the `file://` prefix when
          referencing the zip from local filesystem). -->
-    <eap7.download.url>valid-url-for-eap-7-needs-to-be-specified-here-or-via-cmd-line</eap7.download.url>
+    <eap7.download.url>http://valid-url-for-eap-7-needs-to-be-specified-here-or-via-cmd-line.com</eap7.download.url>
 
     <!-- Integration tests and Cargo are skipped by default. They are activated when specific container profile is used. -->
     <skipITs>true</skipITs>
@@ -90,7 +90,8 @@
     <module>kie-server-integ-tests-router</module>
     <module>kie-server-integ-tests-case-id-generator</module>
     <module>kie-server-integ-tests-dmn</module>
-    <module>kie-server-integ-tests-custom-extension</module>    
+    <module>kie-server-integ-tests-scenario-simulation</module>
+    <module>kie-server-integ-tests-custom-extension</module>
   </modules>
 
   <dependencyManagement>
@@ -258,6 +259,7 @@
                 <org.kie.server.persistence.ds>${org.kie.server.persistence.ds}</org.kie.server.persistence.ds>
                 <org.kie.server.persistence.dialect>${org.kie.server.persistence.dialect}</org.kie.server.persistence.dialect>
                 <org.kie.server.mode>${org.kie.server.mode.production}</org.kie.server.mode>
+                <org.jbpm.ht.admin.user>administrator</org.jbpm.ht.admin.user>
               </systemProperties>
             </container>
             <deployables>
@@ -286,7 +288,7 @@
                   </roles>
                 </user>
                 <user>
-                  <name>Administrator</name>
+                  <name>administrator</name>
                   <password>usetheforce123@</password>
                   <roles>
                     <role>kie-server</role>
@@ -360,6 +362,7 @@
                   <jms.skip>${jms.skip}</jms.skip>
                   <kie.server.testing.server.local.repo.dir>${kie.server.testing.server.local.repo.dir}</kie.server.testing.server.local.repo.dir>
                   <kie.server.testing.remote.repo.dir>${kie.server.testing.remote.repo.dir}</kie.server.testing.remote.repo.dir>
+                  <maven.home>${maven.home}</maven.home>
                 </systemPropertyVariables>
               </configuration>
             </execution>
@@ -647,7 +650,7 @@
                 </container>
                 <configuration>
                   <properties>
-                    <cargo.jvmargs>-Xmx1024m</cargo.jvmargs>
+                    <cargo.jvmargs>-Xmx2048m</cargo.jvmargs>
                     <cargo.tomcat.valve.jaas>
                       className=org.kie.integration.tomcat.JACCValve
                     </cargo.tomcat.valve.jaas>
@@ -781,7 +784,7 @@
                 <configuration>
                   <properties>
                     <cargo.jboss.configuration>standalone-full</cargo.jboss.configuration>
-                    <cargo.jvmargs>-Xmx1024m</cargo.jvmargs>
+                    <cargo.jvmargs>-Xmx2048m</cargo.jvmargs>
                     <cargo.resource.resource.mail>
                        cargo.resource.name=mail/Session|
                        cargo.resource.type=javax.mail.Session|
@@ -877,7 +880,7 @@
                 <configuration>
                   <properties>
                     <cargo.jboss.configuration>standalone-full</cargo.jboss.configuration>
-                    <cargo.jvmargs>-Xmx1024m</cargo.jvmargs>
+                    <cargo.jvmargs>-Xmx2048m</cargo.jvmargs>
                     <cargo.resource.resource.mail>
                        cargo.resource.name=mail/Session|
                        cargo.resource.type=javax.mail.Session|
@@ -976,7 +979,7 @@
                 <configuration>
                   <type>standalone</type>
                   <properties>
-                    <cargo.jvmargs>-Xmx1024m -Dkie.server.jms.queues.response=jms/KIE.SERVER.RESPONSE</cargo.jvmargs>
+                    <cargo.jvmargs>-Xmx2048m -Dkie.server.jms.queues.response=jms/KIE.SERVER.RESPONSE</cargo.jvmargs>
                     <!-- CFs -->
                     <cargo.resource.resource.jms.cf.request>
                       cargo.resource.name=jms/cf/KIE.SERVER.REQUEST|
@@ -1058,7 +1061,7 @@
         <kie.server.connection.factory>jms/cf/KIE.SERVER.REQUEST</kie.server.connection.factory>
         <org.kie.server.persistence.ds>jdbc/jbpm</org.kie.server.persistence.ds>
         <kie.server.classifier>ee7</kie.server.classifier>
-        <cargo.container.id>websphere85x</cargo.container.id>
+        <cargo.container.id>websphere9x</cargo.container.id>
         <failsafe.excluded.groups>org.kie.server.integrationtests.category.Email,org.kie.server.integrationtests.category.RemotelyControlled,org.kie.server.integrationtests.category.Transactional</failsafe.excluded.groups>
         <kie.server.war.path>${org.kie.server:kie-server:war:ee7}</kie.server.war.path>
         <!-- Enable integration tests and Cargo when running with application server. -->
@@ -1205,6 +1208,7 @@
         <kieserver.swagger.enabled>false</kieserver.swagger.enabled>
         <jbpm.executor.enabled>false</jbpm.executor.enabled>
         <kieserver.prometheus.enabled>false</kieserver.prometheus.enabled>
+        <kieserver.scenariosimulation.enabled>false</kieserver.scenariosimulation.enabled>
         <!-- Springboot GAV -->
         <springboot.app.group.id>org.kie</springboot.app.group.id>
         <springboot.app.artifact.id>kie-server-spring-boot-integ-tests-sample</springboot.app.artifact.id>

@@ -45,7 +45,7 @@ public abstract class JbpmKieServerBaseIntegrationTest extends RestJmsSharedBase
 
     protected static final String USER_YODA = "yoda";
     protected static final String USER_JOHN = "john";
-    protected static final String USER_ADMINISTRATOR = "Administrator";
+    protected static final String USER_ADMINISTRATOR = "administrator";
     protected static final String USER_MARY = "mary";
 
     protected static final String PERSON_CLASS_NAME = "org.jbpm.data.Person";
@@ -55,8 +55,10 @@ public abstract class JbpmKieServerBaseIntegrationTest extends RestJmsSharedBase
     protected static final String CONTAINER_ID_V2 = "definition-project-v2";
     protected static final String CONTAINER_ID_ALIAS = "definition-project-alias";
     protected static final String BAD_CONTAINER_ID = "bad-definition-project";
+    protected static final String CONTAINER_ID_USERTASK = "usertask-project";
    
     protected static final String PROCESS_ID_USERTASK = "definition-project.usertask";
+    protected static final String PROCESS_ID_USERTASK2 = "definition-project.usertask2";
     protected static final String PROCESS_ID_EVALUATION = "definition-project.evaluation";
     protected static final String PROCESS_ID_EVALUATION_2 = "definition-project.evaluation2";
     protected static final String PROCESS_ID_CALL_EVALUATION = "definition-project.call-evaluation";
@@ -74,7 +76,9 @@ public abstract class JbpmKieServerBaseIntegrationTest extends RestJmsSharedBase
     protected static final String PROCESS_ID_USERTASK_DOUBLE_GROUP = "query-project.usertask-double-group";
     protected static final String PROCESS_ID_USERTASK_WITH_SLA = "definition-project.UserTaskWithSLA";
     protected static final String PROCESS_ID_USERTASK_WITH_SLA_ON_TASK = "definition-project.UserTaskWithSLAOnTask";
-
+    protected static final String PROCESS_ID_USERTASK_WITH_ROLLBACK = "UserTaskWithRollback";
+    protected static final String PROCESS_ID_USERTASK_DIFF_POTUSERS = "usertask-project.usertask-diff-potusers";
+    
     protected static final long SERVICE_TIMEOUT = 30000;
     protected static final long TIMEOUT_BETWEEN_CALLS = 200;
     protected static final long BAD_TASK_ID = 123456l;
@@ -84,9 +88,11 @@ public abstract class JbpmKieServerBaseIntegrationTest extends RestJmsSharedBase
     protected QueryServicesClient queryClient;
     protected JobServicesClient jobServicesClient;
     protected DocumentServicesClient documentClient;
+
     // admin clients
     protected ProcessAdminServicesClient processAdminClient;
     protected UserTaskAdminServicesClient userTaskAdminClient;
+
 
     @Before
     public void cleanup() {
